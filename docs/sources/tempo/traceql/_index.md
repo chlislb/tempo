@@ -67,6 +67,7 @@ The following table shows the current intrinsic fields:
 | **Field**       | **Type**    | **Definition**                                                  | **Example**                     |
 |-----------------|-------------|-----------------------------------------------------------------|---------------------------------|
 | status          | status enum | status: error, ok, or unset                                     | { status = ok }                 |
+| statusMessage   | string      | optional text accompanying the span status                      | { statusMessage = "Forbidden" } |
 | duration        | duration    | end - start time of the span                                    | { duration > 100ms }            |
 | name            | string      | operation or span name                                          | { name = "HTTP POST" }          |
 | kind            | kind enum   | kind: server, client, producer, consumer, internal, unspecified | { kind = server }               |
@@ -144,7 +145,7 @@ For example, to find all traces where an `http.status_code` attribute in a span 
 This works for `http.status_code` values that are strings as well using lexographic ordering:
 
 ```
-{ span.http.status_code >= "400"}
+{ span.http.status_code >= "400" }
 ```
 
 Find all traces where the `http.method` attribute is either `GET` or `DELETE`:
@@ -255,7 +256,7 @@ TraceQL supports a grouping pipeline operator that can be used to group by arbit
 find someting like a single service with more than 1 error:
 
 ```
-{ error = true } | by(resource.service.name) | count() > 1
+{ status = error } | by(resource.service.name) | count() > 1
 ```
 
 ## Arithmetic
